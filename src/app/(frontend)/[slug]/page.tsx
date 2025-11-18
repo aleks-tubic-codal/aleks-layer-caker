@@ -1,9 +1,7 @@
-import { notFound } from "next/navigation";
-
-import { sanityFetch } from "@/sanity/lib/live";
-import { POST_QUERY } from "@/sanity/lib/queries";
-import { Post } from "@/components/post";
 import type { Metadata } from "next";
+import { sanityFetch } from "@/sanity/lib/live";
+import { PAGE_QUERY } from "@/sanity/lib/queries";
+import { PageBuilder } from "@/components/page-builder";
 
 type RouteProps = {
   params: Promise<{ slug: string }>;
@@ -11,7 +9,7 @@ type RouteProps = {
 
 const getPage = async (params: RouteProps["params"]) =>
   sanityFetch({
-    query: POST_QUERY,
+    query: PAGE_QUERY,
     params: await params,
   });
 
@@ -26,15 +24,13 @@ export async function generateMetadata({
 }
 
 export default async function Page({ params }: RouteProps) {
-  const { data: post } = await getPage(params);
+  const { data: page } = await getPage(params);
 
-  if (!post) {
-    notFound();
-  }
-
-  return (
-    <main className="container mx-auto grid grid-cols-1 gap-6 p-12">
-      <Post {...post} />
-    </main>
-  );
+  return page?.content ? (
+    <PageBuilder
+      documentId={page._id}
+      documentType={page._type}
+      content={page.content}
+    />
+  ) : null;
 }
