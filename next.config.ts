@@ -1,3 +1,4 @@
+import { fetchRedirects } from "@/sanity/lib/fetchRedirects";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
@@ -10,6 +11,9 @@ const nextConfig: NextConfig = {
         hostname: "cdn.sanity.io",
       },
     ],
+  },
+  async redirects() {
+    return await fetchRedirects();
   },
 };
 

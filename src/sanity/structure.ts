@@ -22,6 +22,7 @@ export const structure: StructureResolver = (S) =>
             .schemaType("siteSettings")
             .documentId("siteSettings")
         ),
+      S.documentTypeListItem("redirect").title("Redirects"),
       ...S.documentTypeListItems().filter(
         (item) =>
           item.getId() &&
@@ -32,6 +33,7 @@ export const structure: StructureResolver = (S) =>
             "page",
             "faq",
             "siteSettings",
+            "redirect",
           ].includes(item.getId()!)
       ),
     ]);
