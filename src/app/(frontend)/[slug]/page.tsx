@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { sanityFetch } from "@/sanity/lib/live";
 import { PAGE_QUERY } from "@/sanity/lib/queries";
 import { PageBuilder } from "@/components/page-builder";
+import { urlFor } from "@/sanity/lib/image";
 
 type RouteProps = {
   params: Promise<{ slug: string }>;
@@ -18,9 +19,30 @@ export async function generateMetadata({
 }: RouteProps): Promise<Metadata> {
   const { data: page } = await getPage(params);
 
-  return {
-    title: page?.seo.title,
+  if (!page) {
+    return {};
+  }
+
+  const metadata: Metadata = {
+    title: page.seo.title,
+    description: page.seo.description,
   };
+
+  metadata.openGraph = {
+    images: {
+      url: page.seo.image
+        ? urlFor(page.seo.image).width(1200).height(630).url()
+        : `/api/og?id=${page._id}`,
+      width: 1200,
+      height: 630,
+    },
+  };
+
+  if (page.seo.noIndex) {
+    metadata.robots = "noindex";
+  }
+
+  return metadata;
 }
 
 export default async function Page({ params }: RouteProps) {
