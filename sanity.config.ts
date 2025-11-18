@@ -14,6 +14,7 @@ import { schema } from "./src/sanity/schemaTypes";
 import { structure } from "./src/sanity/structure";
 import { presentationTool } from "sanity/presentation";
 import { resolve } from "@/sanity/presentation/resolve";
+import { assist } from "@sanity/assist";
 
 export default defineConfig({
   basePath: "/studio",
@@ -38,5 +39,6 @@ export default defineConfig({
         },
       },
     }),
+    assist(),
   ],
 });
